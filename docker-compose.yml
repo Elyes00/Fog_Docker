@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  apache:
+    image: tobi312/rpi-apache2
+    container_name: 'apache'
+    restart: 'always'
+    ports:
+      - "90:90"
+      - "443:443"
+    volumes: 
+      - ./www:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./sites-enabled:/etc/apache2/sites-enabled
+      - apache-logs:/var/log/apache2
+  mysql:
+    image: hypriot/rpi-mysql
+    container_name: 'mysql'
+    restart: 'always'
+    volumes: 
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pewdipie
+      MYSQL_DATABASE: pfa
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pewdipie
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.8
+    container_name: 'phpmyadmin'
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - '8080:90'      
+volumes:
+  apache-logs:
+  mysql-data:
+
+
+
+

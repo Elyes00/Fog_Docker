@@ -1,0 +1,31 @@
+
+version: '3'
+
+services:
+  cadvisor:
+    image: budry/cadvisor-arm
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - 9090:9090
+
+
+      services:
+  apache:
+    image: tobi312/rpi-apache2
+    container_name: 'apache'
+    command: -H unix:///var/run/docker.sock
+    restart: 'always'
+    ports:
+      - "9090:9090"
+    volumes: 
+      - ./www:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./sites-enabled:/etc/apache2/sites-enabled
+      - apache-logs:/var/log/apache2
+volumes:
+  apache-logs:
